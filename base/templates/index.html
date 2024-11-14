@@ -1,0 +1,249 @@
+{% extends 'layout/main_layout.html' %}
+{% load static %}
+{% block content %}
+
+
+
+{% block style %}
+   <style>
+@media screen and (min-width: 768px) and (max-width: 992px) {
+.banner__item__text .span-sm {
+color: #e0bdbd;
+}
+}
+
+
+@media screen and (min-width: 1200px)  {
+.banner__item__text .span-lg {
+color: #e0bdbd;
+}
+}
+</style>
+{% endblock style %}
+    
+
+{% include 'layout/header.html' %}
+
+<!-- Hero Section Begin -->
+<section class="hero">
+    <div class="hero__slider owl-carousel">
+        <div class="hero__items set-bg" data-setbg="{% static 'img/hero/herp-3.jpg' %}">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-7 col-md-8">
+                        <div class="hero__text">
+                            <h6>Winter Collection</h6>
+                            <h2>Winter Collection 2025</h2>
+                            <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro quasi enim corrupti illo, autem </p> -->
+                            <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                            <div class="hero__social">
+                                <a href="https://www.facebook.com/share/1ASKvyJvjr/?mibextid=qi2Omg"><i class="fab fa-facebook"></i></a>
+                                <a href="https://wa.me/201060975220"><i class="fab fa-whatsapp"></i></a>
+                                <a href="https://www.tiktok.com/@retroo.eg?_t=8rMPyaodjlK&_r=1"><i class="fa-brands fa-tiktok"></i></a>
+                                <a href="https://www.instagram.com/retro__store4?igsh=MXNjMnZpeHc1cGpqZg=="><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="hero__items set-bg" data-setbg="{% static 'img/hero/hero-2.jpg' %}">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-7 col-md-8">
+                        <div class="hero__text">
+                            <h6>Winter Collection</h6>
+                            <h2>Winter Collection 2025</h2>
+                            <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
+                            commitment to exceptional quality.</p>
+                            <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                            <div class="hero__social">
+                                <a href="https://www.facebook.com/share/1ASKvyJvjr/?mibextid=qi2Omg"><i class="fab fa-facebook"></i></a>
+                                <a href="https://wa.me/201060975220"><i class="fab fa-whatsapp"></i></a>
+                                <a href="https://www.tiktok.com/@retroo.eg?_t=8rMPyaodjlK&_r=1"><i class="fa-brands fa-tiktok"></i></a>
+                                <a href="https://www.instagram.com/retro__store4?igsh=MXNjMnZpeHc1cGpqZg=="><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+
+
+    </div>
+</section>
+<!-- Hero Section End -->
+
+
+
+<!-- Banner Section Begin -->
+<section class="banner spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 offset-lg-4">
+                <div class="banner__item">
+                    <div class="banner__item__pic">
+                        <img src="{% static 'img/banner/banner15.jpg' %}" alt="">
+                    </div>
+                    <div class="banner__item__text">
+                        <h2>Hoodies Collections 2<span class="span-lg">0<span class="span-sm">25</span></span> </span></h2>
+                        <a href="{% url 'shop' %}">Shop now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="banner__item banner__item--middle">
+                    <div class="banner__item__pic">
+                        <img src="{% static 'img/banner/banner12.png' %}" alt="">
+                    </div>
+                    <div class="banner__item__text">
+                        <h2>Offers</h2>
+                        <a href="{% url 'shop' %}">Shop now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="banner__item banner__item--last">
+                    <div class="banner__item__pic">
+                        <img src="{% static 'img/banner/banner222.png' %}" alt="">
+                    </div>
+                    <div class="banner__item__text">
+                        <h2>Top Quality</h2>
+                        <a href="{% url 'shop' %}">Shop now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Banner Section End -->
+
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="filter__controls">
+                    
+                    {% for section in sections_with_products.keys %}
+                    <!-- <li class="{% if forloop.first %}active{% endif %}" data-filter="*">{{ section.name }}</li> -->
+
+                        <li  data-filter=".{{ section.data_filter }}">{{ section.name }}</li>
+
+                    {% endfor %}
+                    <!-- <li class="active" data-filter="*">Best Sellers</li>
+                    <li data-filter=".new-arrivals">New Arrivals</li>
+                    <li data-filter=".hot-sales">Hot Sales</li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="row product__filter">
+            {% for section, products in sections_with_products.items %}
+
+            {% for product in products %}
+            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix {{section.data_filter}}">
+                <div class="product__item {% if product.on_sale %}sale{% endif %}">
+
+                    <a href="{% url 'product_detail' product.id %}">
+                    <div class="product__item__pic  set-bg" data-setbg="{{product.image.url}}">
+                        {% if product.on_sale %}
+                        <span class="label">Sale</span>
+                        {% elif product.is_new %}
+                        <span class="label">New</span>
+                        {% endif %}
+                    </div>
+                </a>
+
+                    <div class="product__item__text">
+                        <h6>{{ product.name }}</h6>
+                        <a href="{% url 'product_detail' product.id %}" class="add-cart">+ Add To Cart</a>
+                        <div class="rating">
+                            
+                            {% if product.ratings == 5 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            {% elif product.ratings == 4 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% elif product.ratings == 3 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% elif product.ratings == 2 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% elif product.ratings == 1 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% else %}
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% endif %}
+
+                        </div>
+                        <h5>{{ product.price }} EGP</h5>
+                        <div class="product__color__select">
+                            {% for color in product.colors.all %}
+                            <label style="background-color: {{color.hex_value}};" for="pc-{{ forloop.counter }}">
+                                <input disabled type="radio" id="pc-{{ forloop.counter }}">
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+
+            {% endfor %} 
+
+           
+
+        </div>
+    </div>
+</section>
+<!-- Product Section End -->
+
+
+
+    {% endblock %}
+
+    {% block script %}
+        
+
+    <script>
+    $(document).ready(function() {
+        $("#index").addClass("active");
+
+
+
+
+    });
+
+    </script>
+
+    {% endblock script %}
+
+
+
+ 
+
+

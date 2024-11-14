@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Retro</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+    <!-- <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css"> -->
+
+
+    <link rel="stylesheet" href="{% static 'css/font-awesome-all.css' %}" type="text/css">
+
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
+
+
+
+    <link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+
+
+    
+    {% block style %}
+        
+    {% endblock style %}
+        
+</head>
+<body>
+
+        {% block content %}
+        {% endblock %}
+
+    <!-- Footer Section Begin -->
+    <footer class="footer pb-5 pt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                    <div style="padding-top: 0px ;margin-top: -10px;" class="header__logo footer__logo">
+                        <a href="./index.html"><h2 style="color: whitesmoke; " class="poppins-white">Retro</h2></a>
+                    </div>
+                        <!-- <p>The customer is at the heart of our unique business model, which includes design.</p>
+                        <a href="#"><img src="img/payment.png" alt=""></a> -->
+                    </div>
+                </div>
+                <!-- <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Shopping</h6>
+                        <ul>
+                            <li><a href="#">Clothing Store</a></li>
+                            <li><a href="#">Clothing Store</a></li>
+                            <li><a href="#">Clothing Store</a></li>
+                            <li><a href="#">Clothing Store</a></li>
+                        </ul>
+                    </div>
+                </div> -->
+                <!-- <div class="offset-6 col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Pages</h6>
+                        <ul>
+                            <li><a href="{% url 'contacts' %}">Contact Us</a></li>
+                            <li><a href="{% url 'shop' %}">Shop</a></li>
+                        </ul>
+                    </div>
+                </div> -->
+                <!-- <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>NewLetter</h6>
+                        <div class="footer__newslatter">
+                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                            <form action="#">
+                                <input type="text" placeholder="Your email">
+                                <button type="submit"><span class="icon_mail_alt"></span></button>
+                            </form>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+
+
+
+
+       <!-- Js Plugins -->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+    <script src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/jquery.slicknav.js' %}"></script>
+    <script src="{% static 'js/mixitup.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+
+
+    <script>
+        $(document).ready(function() {
+            var quantitySpan = $(".header__nav__option a span");
+            if (quantitySpan.length && parseInt(quantitySpan.text()) > 9) {
+
+                console.log("more than 9");
+                quantitySpan.css({
+                    "left":"1px",
+
+                });
+            }
+        });
+    </script>
+    {% block script %}
+        
+    {% endblock script %}
+</body>
+</html>

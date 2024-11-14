@@ -1,0 +1,258 @@
+{% extends 'layout/main_layout.html' %}
+{% load static %}
+
+
+
+{% block style %}
+    <style>
+.product__pagination .pagination{
+    width: auto;
+    border-radius: 10%;
+}
+        
+    </style>
+{% endblock style %}
+    
+
+
+{% block content %}
+
+
+{% include 'layout/header.html' %}
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shop</h4>
+                        <div class="breadcrumb__links">
+                            <a href="{% url 'index' %}">Home</a>
+                            <span>Shop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shop Section Begin -->
+    <section class="shop spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="shop__sidebar">
+                        <div class="shop__sidebar__search">
+                            <form action="{% url 'shop' %}" method="GET">
+                                <input type="text" name="search" placeholder="Search..." value="{{ search_query }}">
+                                <button type="submit"><span class="icon_search"></span></button>
+                            </form>
+                        </div>
+                        <div class="shop__sidebar__accordion">
+                            <div class="accordion" id="accordionExample">
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
+                                    </div>
+                                    <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__categories">
+                                                <ul class="nice-scroll">
+                                                    {% for category in categories %}
+                                                        <li>
+                                                            <a href="?category={{ category.id }}">
+                                                                {{ category.name }} ({{ category.product_count }})
+                                                            </a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
+                                    </div>
+                                    <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__price">
+                                                <form method="GET" action="{% url 'shop' %}">
+                                                    <input type="number" name="price_min" min="{{ min_price }}" max="{{ max_price }}" placeholder="Min">
+                                                    <input type="number" name="price_max" min="{{ min_price }}" max="{{ max_price }}" placeholder="Max">
+                                                    
+                                                    <button class="btn btn-primary " type="submit">GO</button>
+                                            
+                                                </form> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseFour">Size</a>
+                                    </div>
+                                    <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__size">
+                                                {% for size in sizes %}
+                                                    <label for="size-{{ size.id }}">{{ size.name }}
+                                                        <input type="radio" name="size" value="{{ size.id }}" id="size-{{ size.id }}">
+                                                    </label>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                 -->
+                                <!-- <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseFive">Colors</a>
+                                    </div>
+                                    <div id="collapseFive" class="collapse show" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__color">
+                                                {% for color in colors %}
+                                                    <label style="background-color: {{ color.hex_value }};" for="color-{{ color.id }}">
+                                                        <input type="radio" name="color" value="{{ color.id }}" id="color-{{ color.id }}">
+                                                    </label>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="shop__product__option">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__left">
+                                    <p>Showing {{ products.start_index }}–{{ products.end_index }} of {{ total_products_count }} results</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                    {% for product in products %}
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="product__item {% if product.on_sale %}sale{% endif %}">
+                            <a href="{% url 'product_detail' product.id %}">
+                            <div class="product__item__pic set-bg" data-setbg="{{ product.image.url }}">
+                                {% if product.on_sale %}
+                                <span class="label">Sale</span>
+                                {% elif product.is_new %}
+                                <span class="label">New</span>
+                                {% endif %}
+   
+                            </div>
+                        </a>
+                            <div class="product__item__text">
+                                <h6>{{ product.name }}</h6>
+
+
+                                <a href="#" class="add-cart">+ Add To Cart</a>
+
+
+                                
+                                <div class="rating">    
+                                 {% if product.ratings == 5 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            {% elif product.ratings == 4 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% elif product.ratings == 3 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% elif product.ratings == 2 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% elif product.ratings == 1 %}
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% else %}
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            {% endif %}
+                                </div>
+                                <h5>{{ product.price }} EGP</h5>
+                                
+                                <div class="product__color__select">
+                                    {% for color in product.colors.all %}
+                                    <label style="background-color: {{color.hex_value}};" for="pc-{{ forloop.counter }}">
+                                        <input type="radio" id="pc-{{ forloop.counter }}">
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                <!-- Pagination Section -->
+                <div class="product__pagination">
+                    {% if products.has_previous %}
+                        <a class="pagination" href="?{% if category_id %}category={{ category_id }}&{% endif %}{% if search_query %}search={{ search_query }}&{% endif %}page={{ products.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    
+                    {% for page_num in products.paginator.page_range %}
+                        <a href="?{% if category_id %}category={{ category_id }}&{% endif %}{% if search_query %}search={{ search_query }}&{% endif %}page={{ page_num }}" class="{% if products.number == page_num %}active{% endif %}">{{ page_num }}</a>
+                    {% endfor %}
+                    
+                    {% if products.has_next %}
+                        <a class="pagination" href="?{% if category_id %}category={{ category_id }}&{% endif %}{% if search_query %}search={{ search_query }}&{% endif %}page={{ products.next_page_number }}">Next</a>
+                    {% endif %}
+                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+
+
+    
+    {% endblock %}
+    
+    {% block script %}
+    <script>
+        $(document).ready(function() {
+            $("#shop").addClass("active");
+        });
+    
+        </script>
+    {% endblock script %}

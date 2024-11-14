@@ -1,0 +1,152 @@
+{% extends 'layout/main_layout.html' %}
+{% load static %}
+
+{% block style %}
+<style>
+    .product__cart__item__pic img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .order__total { 
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .order__total .total__label {
+        color: #6c757d;
+        font-size: 1.1em;
+    }
+
+    .order__total .total__value {
+        color: #28a745; /* Green color for totals */
+    }
+
+    .order__total .subtotal, .order__total .discount {
+        font-size: 1em;
+        color: #6c757d;
+    }
+
+    .order__total .total__label {
+        font-size: 1.1em;
+    }
+
+    .order__total .discount {
+        font-size: 1em;
+        color: #dc3545; /* Red for discounts */
+    }
+
+    .order__total .final__total {
+        font-size: 1.2em;
+        color: #007bff; /* Blue for the final total */
+    }
+
+</style>
+{% endblock style %}
+
+{% block content %}
+    
+{% include 'layout/header.html' %}
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>My Orders</h4>
+                    <div class="breadcrumb__links">
+                        <a href="{% url 'index' %}">Home</a>
+                        <a href="{% url 'shop' %}">Shop</a>
+                        <span>My Orders</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- My Orders Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                {% if orders %}
+                    {% for order in orders %}
+                    <div class="order__item">
+                        <h5 class="mt-3 mb-3">Order Date: {{ order.ordered_date }}</h5>
+                        <div class="shopping__cart__table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                    <tr>
+                                        <td class="product__cart__item">
+                                            <div class="product__cart__item__pic">
+                                                <img src="{{ item.product.image.url }}" alt="">
+                                            </div>
+                                            <div class="product__cart__item__text">
+                                                <h6>{{ item.product.name }}</h6>
+                                                <h5>{{ item.product.price }} EGP</h5>
+                                                <h6>{{ item.color }} / {{ item.size }}</h6>
+                                            </div>
+                                        </td>
+                                        <td class="quantity__item">
+                                            <span>{{ item.quantity }}</span>
+                                        </td>
+                                        <td class="cart__price">{{ item.get_total_item_price }} EGP</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Order Total, Subtotal, and Discount -->
+                        <div class="order__total mb-5">
+                            <div class="subtotal">
+                                <span class="total__label">Subtotal:</span>
+                                <span class="total__value">{{ order.get_sub_total }} EGP</span>
+                            </div>
+                            {% if order.coupon %}
+                            <div class="discount">
+                                <span class="total__label">Discount:</span>
+                                <span class="total__value">- {{ order.coupon.percent_off }} %</span>
+                            </div>
+                            {% endif %}
+                            <div class="final__total">
+                                <span class="total__label">Total:</span>
+                                <span class="total__value">{{ order.get_total }} EGP</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>You have no past orders.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+<!-- My Orders Section End -->
+
+{% endblock content %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        $("#my_orders").addClass("active");
+    });
+</script>
+{% endblock script %}

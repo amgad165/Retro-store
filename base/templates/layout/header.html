@@ -1,0 +1,57 @@
+{% load static %}
+
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+
+        <div class="offcanvas__nav__option">
+
+            <a href="{% url 'cart' %}"><img src="{% static 'img/icon/bag.png' %}" alt=""> <span>{{ total_quantity }}</span></a>
+            <div class="price">{{ total_price }} EGP</div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+
+    </div>
+    <!-- Offcanvas Menu End -->
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__logo">
+                        <a href="{% url 'index' %}"><h2 class="poppins-black">Retro</h2></a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li id="index"><a href="{% url 'index' %}">Home</a></li>
+                            <li id="shop" ><a href="{% url 'shop' %}">Shop</a></li>
+ 
+                            <li id="contacts"><a href="{% url 'contacts' %}">Contacts</a></li>
+                            <li id="my_orders"><a href="{% url 'my_orders' %}">My Orders</a></li>
+
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="header__nav__option">
+
+                    <a href="{% url 'cart' %}"><img src="{% static 'img/icon/cart.png' %}" alt=""> <span id="total-quantity">{{ total_quantity }}</span></a>
+                    <div id="total-price" class="price">{{ total_price }} EGP</div>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+

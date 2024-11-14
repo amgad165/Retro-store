@@ -1,0 +1,191 @@
+{% extends 'layout/main_layout.html' %}
+{% load static %}
+
+
+
+{% block style %}
+
+<style>
+
+
+    .product__cart__item__pic img{
+        width: 90px;
+        height: 90px;
+    }
+
+
+
+</style>
+{% endblock style %}
+    
+
+{% block content %}
+    
+{% include 'layout/header.html' %}
+
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shopping Cart</h4>
+                        <div class="breadcrumb__links">
+                            <a href="{% url 'index' %}">Home</a>
+                            <a href="{% url 'shop' %}">Shop</a>
+                            <span>Shopping Cart</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shopping Cart Section Begin -->
+    <section class="shopping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="shopping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <form action="{% url 'update_cart' %}" method="post">
+                                    {% csrf_token %}
+                                {% for item in order_items %}
+
+                                <input type="hidden" name="item_id" value="{{ item.id }}">
+
+                                <tr>
+                                    <td class="product__cart__item">
+                                        <div class="product__cart__item__pic">
+                                            <img src="{{ item.product.image.url }}" alt="">
+                                        </div>
+                                        <div class="product__cart__item__text">
+                                            <h6>{{ item.product.name }}</h6>
+                                            <h5>{{ item.product.price }} EGP</h5>
+                                            <h6>{{ item.color }}   /   {{ item.size }}</h6>
+                                            
+
+                                        </div>
+                                    </td>
+                                    <td class="quantity__item">
+                                        <div class="quantity">
+                                            <div class="pro-qty-2">
+                                                <input name="quantity" type="text" value="{{ item.quantity }}">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">{{ item.get_total_item_price }} EGP</td>
+                                    <td class="cart__close"><a href="{% url 'remove_item' item_id=item.id %}"><i class="fa fa-close"></i></a></td> 
+                                </tr>
+                                    
+                                    {% endfor %}
+
+                                  
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="continue__btn">
+                                <a href="{% url 'shop' %}">Continue Shopping</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="continue__btn update__btn">
+                                <button type="submit"><i class="fa fa-spinner"></i> Update cart </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                </div>
+                <div class="col-lg-4">
+                    <div class="cart__discount">
+                        <h6>Discount codes</h6>
+                        <form action="#">
+                            <input id="couponCode" type="text" placeholder="Coupon code">
+                            <button id="applyCoupon" type="button">Apply</button>
+                        </form>
+                    </div>
+                    <div class="cart__total">
+                        <h6>Cart total</h6>
+                        <ul>
+                            <li>Subtotal <span>{{sub_total}} EGP</span></li>
+                            
+                            {% if discount %}
+                            <li>Discount Applied <span>{{discount}} %</span></li>
+                            {% endif %}
+                                
+                            <li><span id="couponMessage"></span></li>
+                            <li>Total <span id="total-price">{{total_price}} EGP</span></li>
+                        </ul>
+                        <a href="{% url 'checkout' %}" class="primary-btn">Proceed to checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shopping Cart Section End -->
+
+
+
+
+
+
+
+
+
+
+
+    {% endblock content %}
+
+
+    {% block script %}
+        
+    <script>
+        $(document).ready(function() {
+            $('#applyCoupon').click(function() {
+                const couponCode = $('#couponCode').val();
+      
+                $.ajax({
+                    url: "{% url 'calculate_price' %}",  // Adjust with your URL
+                    method: "POST",
+                    data: {
+                        'coupon_code': couponCode,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    success: function(response) {
+                        // Update the total price
+                        $('#total-price').text(`${response.final_price} EGP`);
+      
+                      console.log(response.final_price);
+      
+                        // Show coupon message if present
+                        if (response.messages.coupon_message) {
+                            $('#couponMessage').text(response.messages.coupon_message).show();
+                        } else {
+                            $('#couponMessage').hide(); // Hide if there's no coupon message
+                        }
+
+      
+                                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error:', error);
+                    }
+                });
+            });
+        });
+      </script>
+      
+    {% endblock script %}

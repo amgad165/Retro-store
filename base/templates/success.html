@@ -1,0 +1,45 @@
+{% extends 'layout/main_layout.html' %}
+{% load static %}
+
+
+
+{% block style %}
+    <style>
+        .success {
+margin-bottom: 280px;
+        }
+
+@media (max-width: 968px) {
+    .success {
+        margin-bottom: 100px;
+    }
+}
+</style>
+{% endblock %}
+    
+{% block content %}
+
+{% include 'layout/header.html' %}
+
+
+    <!-- Breadcrumb Section End -->
+
+    <!-- Checkout Section Begin -->
+<section class="success spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>Thank you for your order</h2>
+                    <p>Your order has been successfully placed. You will receive your items within 3-4 business days.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <!-- Checkout Section End -->
+
+
+
+{% endblock %}
+

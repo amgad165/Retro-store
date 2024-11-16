@@ -128,7 +128,7 @@
                             {% endif %}
                                 
                             <li><span id="couponMessage"></span></li>
-                            <li>Total <span id="total-price">{{total_price}} EGP</span></li>
+                            <li>Total <span class="total-price" id="total-price">{{total_price}} EGP</span></li>
                         </ul>
                         <a href="{% url 'checkout' %}" class="primary-btn">Proceed to checkout</a>
                     </div>
@@ -167,7 +167,7 @@
                     },
                     success: function(response) {
                         // Update the total price
-                        $('#total-price').text(`${response.final_price} EGP`);
+                        $('.total-price').text(`${response.final_price} EGP`);
       
                       console.log(response.final_price);
       

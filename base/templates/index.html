@@ -18,6 +18,10 @@ color: #e0bdbd;
 color: #e0bdbd;
 }
 }
+
+
+
+
 </style>
 {% endblock style %}
     
@@ -27,7 +31,7 @@ color: #e0bdbd;
 <!-- Hero Section Begin -->
 <section class="hero">
     <div class="hero__slider owl-carousel">
-        <div class="hero__items set-bg" data-setbg="{% static 'img/hero/herp-3.jpg' %}">
+        <div class="hero__items set-bg" data-setbg="{% static 'img/hero/hero2.jpg' %}">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-5 col-lg-7 col-md-8">
@@ -35,7 +39,7 @@ color: #e0bdbd;
                             <h6>Winter Collection</h6>
                             <h2>Winter Collection 2025</h2>
                             <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro quasi enim corrupti illo, autem </p> -->
-                            <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                            <a href="{% url 'shop' %}" class="primary-btn">Shop now <span class="arrow_right"></span></a>
                             <div class="hero__social">
                                 <a href="https://www.facebook.com/share/1ASKvyJvjr/?mibextid=qi2Omg"><i class="fab fa-facebook"></i></a>
                                 <a href="https://wa.me/201060975220"><i class="fab fa-whatsapp"></i></a>
@@ -142,7 +146,7 @@ color: #e0bdbd;
             {% for section, products in sections_with_products.items %}
 
             {% for product in products %}
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix {{section.data_filter}}">
+            <div class="col-6 col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix {{section.data_filter}}">
                 <div class="product__item {% if product.on_sale %}sale{% endif %}">
 
                     <a href="{% url 'product_detail' product.id %}">

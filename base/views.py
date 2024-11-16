@@ -26,7 +26,7 @@ def index(request):
 
 def shop(request):
     # Get all products
-    products = Product.objects.all()
+    products = Product.objects.all().order_by('-id')
 
     # Get filter options
     categories = Category.objects.annotate(product_count=Count('product'))

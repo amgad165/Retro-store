@@ -1,5 +1,33 @@
 {% load static %}
 
+{% block style %}
+
+<style>
+@media only screen and (max-width: 767px) {
+    .cart-mobile {
+        display: block;
+        text-align: right;
+        cursor: pointer;
+        position: absolute;
+        right: 39px;
+        top: 25px;
+    }
+    .cart-mobile span {
+    color: #0d0d0d;
+    font-size: 12px;
+    position: relative;
+    top: 4px;
+    right: 24px;
+
+}
+
+ 
+}
+
+</style>
+    
+{% endblock style %}
+    
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -11,15 +39,15 @@
 
         <div class="offcanvas__nav__option">
 
-            <a href="{% url 'cart' %}"><img src="{% static 'img/icon/bag.png' %}" alt=""> <span>{{ total_quantity }}</span></a>
-            <div class="price">{{ total_price }} EGP</div>
+
         </div>
+   
         <div id="mobile-menu-wrap"></div>
 
     </div>
     <!-- Offcanvas Menu End -->
     <!-- Header Section Begin -->
-    <header class="header">
+    <header class="header sticky-top">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
@@ -42,14 +70,21 @@
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
 
-                    <a href="{% url 'cart' %}"><img src="{% static 'img/icon/cart.png' %}" alt=""> <span id="total-quantity">{{ total_quantity }}</span></a>
-                    <div id="total-price" class="price">{{ total_price }} EGP</div>
+                    <a href="{% url 'cart' %}"><img src="{% static 'img/icon/cart.png' %}" alt=""> <span class="total-quantity" id="total-quantity">{{ total_quantity }}</span></a>
+                    <div  id="total-price" class="price total-price">{{ total_price }} EGP</div>
                     </div>
 
                     </div>
-                </div>
-            </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+
+                 
+                        <div class="canvas__open 6 d-block d-md-none"><i class="fa fa-bars"></i></div>
+                        <div class="col-6 d-block d-md-none cart-mobile">
+                            <a href="{% url 'cart' %}"><img src="{% static 'img/icon/bag.png' %}" alt=""> <span class="total-quantity" id="total-quantity">{{ total_quantity }}</span></a>
+                        </div>
+
+
+        </div>
+        </div>
         </div>
     </header>
     <!-- Header Section End -->

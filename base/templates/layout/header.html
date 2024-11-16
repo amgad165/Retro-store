@@ -87,6 +87,19 @@
         </div>
         </div>
     </header>
+
+    
+    {% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var cartMobileSpan = document.querySelector('.cart-mobile span');
+            if (cartMobileSpan && cartMobileSpan.textContent.length === 2) {
+                cartMobileSpan.style.right = '26px';
+            }
+        });
+    </script>  
+    {% endblock script %}
+
     <!-- Header Section End -->
 
 

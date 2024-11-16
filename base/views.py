@@ -247,42 +247,41 @@ def remove_item(request,item_id):
 
 def confirm_order(request):
     if request.method == 'POST':
-        print
         session_key = request.session.session_key
 
-        try:
-            # Retrieve the existing order for the session
-            order = Order.objects.get(session_key=session_key, ordered=False)
-            order_items = order.items.all()
-            
-            # Collect user details from the POST request
-            user_details, created = UserDetails.objects.update_or_create(
-                session_key=session_key,
-                defaults={
-                'first_name': request.POST.get('first_name'),
-                'last_name': request.POST.get('last_name'),
-                'country': request.POST.get('country'),
-                'address': request.POST.get('address'),
-                'apartment': request.POST.get('apartment', ''),
-                'city': request.POST.get('city'),
-                'state': request.POST.get('state'),
-                'postal_code': request.POST.get('postal_code'),
-                'phone': request.POST.get('phone'),
-                'email': request.POST.get('email'),
-                'order_notes': request.POST.get('order_notes', '')
-                }
-            )
-            
-            # Mark order items as ordered
-            order_items.update(ordered=True)
-            order.ordered = True
-            order.user_details = user_details
-            order.save()
+        # try:
+        # Retrieve the existing order for the session
+        order = Order.objects.get(session_key=session_key, ordered=False)
+        order_items = order.items.all()
+        
+        # Collect user details from the POST request
+        user_details, created = UserDetails.objects.update_or_create(
+            session_key=session_key,
+            defaults={
+            'first_name': request.POST.get('first_name'),
+            'last_name': request.POST.get('last_name'),
+            'country': request.POST.get('country'),
+            'address': request.POST.get('address'),
+            'apartment': request.POST.get('apartment', ''),
+            'city': request.POST.get('city'),
+            'state': request.POST.get('state'),
+            'postal_code': request.POST.get('postal_code'),
+            'phone': request.POST.get('phone'),
+            'email': request.POST.get('email'),
+            'order_notes': request.POST.get('order_notes', '')
+            }
+        )
+        
+        # Mark order items as ordered
+        order_items.update(ordered=True)
+        order.ordered = True
+        order.user_details = user_details
+        order.save()
 
-            return render(request, "success.html")  # Success page after order confirmation
+        return render(request, "success.html")  # Success page after order confirmation
 
-        except Exception as e:
-            return HttpResponseServerError("A serious error occurred. We have been notified.", content_type="text/plain")
+        # except Exception as e:
+        #     return HttpResponseServerError("A serious error occurred. We have been notified.", content_type="text/plain")
     
     return HttpResponseServerError("Invalid request method", content_type="text/plain")
 

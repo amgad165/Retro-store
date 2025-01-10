@@ -74,7 +74,13 @@
                                         <div class="product__cart__item__text">
                                             <h6>{{ item.product.name }}</h6>
                                             <h5>{{ item.product.price }} EGP</h5>
-                                            <h6>{{ item.color }}   /   {{ item.size }}</h6>
+                                            {% if item.color and item.size %}
+                                                <h6>{{ item.color }} / {{ item.size }}</h6>
+                                            {% elif item.color %}
+                                                <h6>{{ item.color }}</h6>
+                                            {% elif item.size %}
+                                                <h6>{{ item.size }}</h6>
+                                            {% endif %}
                                             
 
                                         </div>

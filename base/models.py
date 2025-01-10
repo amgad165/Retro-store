@@ -74,7 +74,9 @@ class OrderItem(models.Model):
     ordered = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name} ({self.color}, {self.size})"
+        color = self.color.name if self.color else "No color"
+        size = self.size.name if self.size else "No size"
+        return f"{self.quantity} x {self.product.name} ({color}, {size})"
 
     def get_total_item_price(self):
         return self.quantity * self.product.price

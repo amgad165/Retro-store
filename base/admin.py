@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import *
 from .forms import ProductImageForm
+
+
 # Register your models here.
 
 admin.site.register(Category)
@@ -31,21 +33,18 @@ admin.site.register(Product, ProductAdmin)
 
 admin.site.register(OrderItem)
 
-from django.contrib import admin
-from .models import Order, OrderItem, Product, Color, Size, Coupon, UserDetails
 
-from django.contrib import admin
-from .models import Order, OrderItem, Product, Color, Size, Coupon, UserDetails
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'order_summary', 'get_user_name', 'get_user_phone', 
-        'get_user_email', 'get_user_address', 'get_order_total', 'get_order_quantity', 
-        'get_subtotal', 'get_discount', 'ordered_date', 'ordered', 'delivered', 'received'
+         'get_user_address', 'get_order_total', 'get_order_quantity', 
+        'get_subtotal', 'get_discount', 'get_delivery_fee', 'ordered_date', 'ordered', 
+        'delivered', 'received'
     )
-    list_editable = ('delivered', 'received')  # Make being_delivered and received editable
+    list_editable = ('delivered', 'received')  # Make delivered and received editable
     search_fields = ('order_summary',)  # Allow searching by order summary
-    list_filter = ('ordered', 'delivered')  # Filters for ordered and being_delivered fields
+    list_filter = ('ordered', 'delivered')  # Filters for ordered and delivered fields
     
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -66,10 +65,10 @@ class OrderAdmin(admin.ModelAdmin):
         return obj.user_details.phone if obj.user_details else ""
     get_user_phone.short_description = 'Phone'
 
-    def get_user_email(self, obj):
-        # Get user's email from UserDetails
-        return obj.user_details.email if obj.user_details else ""
-    get_user_email.short_description = 'Email'
+    # def get_user_email(self, obj):
+    #     # Get user's email from UserDetails
+    #     return obj.user_details.email if obj.user_details else ""
+    # get_user_email.short_description = 'Email'
 
     def get_user_address(self, obj):
         # Get user's full address from UserDetails
@@ -79,18 +78,15 @@ class OrderAdmin(admin.ModelAdmin):
             country = obj.user_details.country
             if obj.user_details.apartment:
                 apartment = obj.user_details.apartment
-                full_address = f" {address},{apartment} , '\n' {city}, {country}"
-
+                full_address = f" {address}, {apartment}, '\n' {city}, {country}"
             else:
-                full_address = f" {address} , '\n' {city}, {country}"
-
-            # Concatenate the address fields
+                full_address = f" {address}, '\n' {city}, {country}"
             return full_address
         return ""
     get_user_address.short_description = 'Address'
 
     def get_order_total(self, obj):
-        # Get total amount for the order, applying any coupon discounts
+        # Get total amount for the order, applying any coupon discounts and delivery fee
         total = obj.get_total()  # Assuming the get_total method handles total calculation
         return f"{total:.2f} EGP"  # Format the total as currency
     get_order_total.short_description = 'Total'
@@ -108,11 +104,18 @@ class OrderAdmin(admin.ModelAdmin):
     def get_discount(self, obj):
         # Get discount applied to the order
         if obj.coupon:
-            discount = obj.coupon.percent_off  # Assuming get_discount method exists
+            discount = obj.coupon.percent_off
         else:   
             discount = 0
         return f"{discount:.2f} %"  # Format the discount as percentage
     get_discount.short_description = 'Discount'
+
+    def get_delivery_fee(self, obj):
+        # Get the delivery fee for the order
+        if hasattr(obj, 'delivery_fee') and obj.delivery_fee:
+            return f"{obj.delivery_fee.fee:.2f} EGP"
+        return "0.00 EGP"
+    get_delivery_fee.short_description = 'Delivery Fee'
 
     def ordered_date(self, obj):
         # Display the order's ordered date
@@ -130,3 +133,4 @@ admin.site.register(UserDetails)
 
 admin.site.register(Coupon)
 admin.site.register(Contact)
+admin.site.register(DeliveryFee)

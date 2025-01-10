@@ -8,6 +8,8 @@ from django.db.models import Min, Max
 from django.db.models import Count, Min, Max, Q
 from django.core.paginator import Paginator
 
+from .models import DeliveryFee  # Import your delivery model
+
 # Create your views here.
 
 def index(request):
@@ -141,30 +143,37 @@ def checkout(request):
         order_items = order.items.all()
         cart_count = len(order.items.all())
         
-        # get total orders 
+        # Get total orders 
         total_price = order.get_total()
         subtotal_price = order.get_sub_total()
 
         if order.coupon:
-            discount= order.coupon.percent_off
+            discount = order.coupon.percent_off
         else:
             discount = None
 
-        # if order.delivery_fee:
-        #     delivery_fee= order.delivery_fee.fee
-        # else:
-        #     delivery_fee = None
 
-        delivery_fee = None
+        # Fetch all delivery fees
+        delivery_options = DeliveryFee.objects.all()
 
-
-        return render(request, "checkout.html", {'order_items': order_items,'total_price':total_price,'subtotal_price':subtotal_price,"cart_count":cart_count , "discount":discount,"order":order,"delivery_fee":delivery_fee})
+        return render(
+            request, 
+            "checkout.html", 
+            {
+                'order_items': order_items,
+                'total_price': total_price,
+                'subtotal_price': subtotal_price,
+                'cart_count': cart_count,
+                'discount': discount,
+                'order': order,
+                'delivery_options': delivery_options,  # Pass delivery options to template
+            }
+        )
 
     except Order.DoesNotExist:
         # Handle the case where the order doesn't exist
         order_items = None    
         return render(request, "checkout.html", {'order_items': order_items})
-
 
 
 def cart(request):
@@ -199,7 +208,6 @@ def cart(request):
     
 
 def update_cart(request):
-    print('hha')
     if request.method == "POST":
         # Process the data sent by the "Update Cart" button
 
@@ -253,23 +261,29 @@ def confirm_order(request):
             # Retrieve the existing order for the session
             order = Order.objects.get(session_key=session_key, ordered=False)
             order_items = order.items.all()
-            
+
             # Collect user details from the POST request
             user_details, created = UserDetails.objects.update_or_create(
                 session_key=session_key,
                 defaults={
-                'first_name': request.POST.get('first_name'),
-                'last_name': request.POST.get('last_name'),
-                'country': request.POST.get('country'),
-                'address': request.POST.get('address'),
-                'apartment': request.POST.get('apartment', ''),
-                'city': request.POST.get('city'),
-                'phone': request.POST.get('phone'),
-                'email': request.POST.get('email'),
-                'order_notes': request.POST.get('order_notes', '')
+                    'first_name': request.POST.get('first_name'),
+                    'last_name': request.POST.get('last_name'),
+                    'country': request.POST.get('country', 'Egypt'),
+                    'address': request.POST.get('address'),
+                    'apartment': request.POST.get('apartment', ''),
+                    'city': request.POST.get('city'),
+                    'phone': request.POST.get('phone'),
+                    'email': request.POST.get('email'),
+                    'order_notes': request.POST.get('order_notes', '')
                 }
             )
-            
+
+            # Retrieve the selected delivery fee
+            delivery_fee_id = request.POST.get('delivery_option')
+            if delivery_fee_id:
+                delivery_fee = DeliveryFee.objects.get(id=delivery_fee_id)
+                order.delivery_fee = delivery_fee
+
             # Mark order items as ordered
             order_items.update(ordered=True)
             order.ordered = True
@@ -280,8 +294,9 @@ def confirm_order(request):
 
         except Exception as e:
             return HttpResponseServerError("A serious error occurred. We have been notified.", content_type="text/plain")
-    
+
     return HttpResponseServerError("Invalid request method", content_type="text/plain")
+
 
 def calculate_price(request):
     if request.method == 'POST':

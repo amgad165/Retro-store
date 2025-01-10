@@ -79,6 +79,7 @@ class OrderItem(models.Model):
     def get_total_item_price(self):
         return self.quantity * self.product.price
 
+
 class Order(models.Model):
     session_key = models.CharField(max_length=32)
     items = models.ManyToManyField(OrderItem)
@@ -89,9 +90,8 @@ class Order(models.Model):
     remark = models.CharField(max_length=255, blank=True, null=True, default="")
 
     coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, blank=True, null=True, related_name='orders')
-    
-    user_details = models.ForeignKey(
-    'UserDetails', on_delete=models.SET_NULL,blank=True, null=True )
+    user_details = models.ForeignKey('UserDetails', on_delete=models.SET_NULL, blank=True, null=True)
+    delivery_fee = models.ForeignKey('DeliveryFee', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return f"Order {self.pk}"
@@ -106,27 +106,32 @@ class Order(models.Model):
             discount = (self.coupon.percent_off / 100) * total
             total -= discount
 
-        # if self.delivery_fee:
-        #     total += self.delivery_fee.fee
+        # Add delivery fee if set
+        if self.delivery_fee:
+            total += self.delivery_fee.fee
+
         return total
-    
 
     def get_sub_total(self):
         total = 0
         for order_item in self.items.all():
             total += order_item.get_total_item_price()
-
         return total
-    
+
     def get_total_quantity(self):
         quantity = 0
         for order_item in self.items.all():
             quantity += order_item.quantity
-
         return quantity
+
     
 
+class DeliveryFee(models.Model):
+    location = models.CharField(max_length=50, unique=True)  # e.g., "Cairo", "Outside Cairo"
+    fee = models.FloatField(default=0.0)
 
+    def __str__(self):
+        return f"{self.location}: {self.fee} EGP"
 
 # class DeliveryFee(models.Model):
 #     fee = models.FloatField(default=0.0)
@@ -167,12 +172,12 @@ class UserDetails(models.Model):
     session_key = models.CharField(max_length=32)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
+    country = models.CharField(max_length=50,default="Egypt")
     address = models.CharField(max_length=255)
     apartment = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=50)
     phone = models.CharField(max_length=20)
-    email = models.EmailField()
+    email = models.EmailField(blank=True, null=True)
     order_notes = models.TextField(blank=True, null=True)
 
     def __str__(self):

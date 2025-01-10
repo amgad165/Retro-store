@@ -130,7 +130,13 @@
                             <li><span id="couponMessage"></span></li>
                             <li>Total <span class="total-price" id="total-price">{{total_price}} EGP</span></li>
                         </ul>
+                        
+                        {% if total_price > 0 %}
                         <a href="{% url 'checkout' %}" class="primary-btn">Proceed to checkout</a>
+                        {% else %}
+
+                        {% endif %}
+                            
                     </div>
                 </div>
             </div>

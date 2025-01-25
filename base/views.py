@@ -9,6 +9,7 @@ from django.db.models import Count, Min, Max, Q
 from django.core.paginator import Paginator
 from django.utils.timezone import now
 import requests
+import hashlib
 
 from .models import DeliveryFee  # Import your delivery model
 
@@ -79,25 +80,38 @@ def shop(request):
 
 
 
+def hash_sha256(value):
+    """Hashes a value using SHA256."""
+    if value:
+        return hashlib.sha256(value.strip().lower().encode('utf-8')).hexdigest()
+    return None
+
 def product_detail(request, product_id):
     # Replace these with your actual values
     ACCESS_TOKEN = 'EAAbwTTi7aZCYBOwUitZAgHV3Kukc5WyzC9hFuLS5yWrsvA6PT08iETMKlypL7ZBk6wEi8NX3Dhbun17CRn3rCM3a3U2ZCCqju48WIZAt92qOjqwKd8SkiVLVXO35DTvQIruQy5qaZB2JRyOytkjMbQBzGkuMti9jLdZAw4Edbe4wqEBFJ03zhNHS9e3hSXALdFTpwZDZD'
     PIXEL_ID = '1859047148169121'
     API_VERSION = 'v16.0'
-
-    # Fetch the product
     product = get_object_or_404(Product, id=product_id)
     
-    # Prepare the event payload
+    # Get client IP and user agent from the request
+    client_ip_address = get_client_ip(request)  # Function to get client IP
+    client_user_agent = request.META.get('HTTP_USER_AGENT', '')
+
+    # Prepare user data
+    email = request.user.email if request.user.is_authenticated else None
+    hashed_email = hash_sha256(email)
+
     payload = {
         "data": [
             {
                 "event_name": "ViewContent",
                 "event_time": int(now().timestamp()),  # Current time as a UNIX timestamp
                 "action_source": "website",
-                "event_source_url": request.build_absolute_uri(),  # URL of the product page
+                "event_source_url": request.build_absolute_uri(),
                 "user_data": {
-                    # Optionally, you can include user data like email, hashed using SHA256
+                    "em": hashed_email,  # Hashed email
+                    "client_ip_address": client_ip_address,
+                    "client_user_agent": client_user_agent,
                 },
                 "custom_data": {
                     "content_name": product.name,
@@ -105,23 +119,29 @@ def product_detail(request, product_id):
                     "content_ids": [product.id],
                     "content_type": "product",
                     "value": float(product.price),
-                    "currency": "EGP",
+                    "currency": "USD",
                 },
             }
         ]
     }
 
-    # Send the event to Facebook's API
     url = f'https://graph.facebook.com/{API_VERSION}/{PIXEL_ID}/events'
     params = {"access_token": ACCESS_TOKEN}
     response = requests.post(url, json=payload, params=params)
 
-    # Log or handle the API response if needed
-    print(response.json())
+    print(response.json())  # Log response for debugging
 
-    # Render the product detail page
     context = {'product': product}
     return render(request, 'shop-details.html', context)
+
+def get_client_ip(request):
+    """Gets the client IP address from the request."""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 
 def add_to_cart(request):

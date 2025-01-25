@@ -7,8 +7,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Min, Max
 from django.db.models import Count, Min, Max, Q
 from django.core.paginator import Paginator
-from django.utils.timezone import now
-import requests
 
 from .models import DeliveryFee  # Import your delivery model
 
@@ -77,49 +75,8 @@ def shop(request):
 
 
 
-
-
 def product_detail(request, product_id):
-    # Replace these with your actual values
-    ACCESS_TOKEN = 'EAAbwTTi7aZCYBOwUitZAgHV3Kukc5WyzC9hFuLS5yWrsvA6PT08iETMKlypL7ZBk6wEi8NX3Dhbun17CRn3rCM3a3U2ZCCqju48WIZAt92qOjqwKd8SkiVLVXO35DTvQIruQy5qaZB2JRyOytkjMbQBzGkuMti9jLdZAw4Edbe4wqEBFJ03zhNHS9e3hSXALdFTpwZDZD'
-    PIXEL_ID = '1859047148169121'
-    API_VERSION = 'v16.0'
-
-    # Fetch the product
-    product = get_object_or_404(Product, id=product_id)
-    
-    # Prepare the event payload
-    payload = {
-        "data": [
-            {
-                "event_name": "ViewContent",
-                "event_time": int(now().timestamp()),  # Current time as a UNIX timestamp
-                "action_source": "website",
-                "event_source_url": request.build_absolute_uri(),  # URL of the product page
-                "user_data": {
-                    # Optionally, you can include user data like email, hashed using SHA256
-                },
-                "custom_data": {
-                    "content_name": product.name,
-                    "content_category": product.category.name if hasattr(product, 'category') else None,
-                    "content_ids": [product.id],
-                    "content_type": "product",
-                    "value": float(product.price),
-                    "currency": "EGP",
-                },
-            }
-        ]
-    }
-
-    # Send the event to Facebook's API
-    url = f'https://graph.facebook.com/{API_VERSION}/{PIXEL_ID}/events'
-    params = {"access_token": ACCESS_TOKEN}
-    response = requests.post(url, json=payload, params=params)
-
-    # Log or handle the API response if needed
-    print(response.json())
-
-    # Render the product detail page
+    product = Product.objects.get(id=product_id)
     context = {'product': product}
     return render(request, 'shop-details.html', context)
 
